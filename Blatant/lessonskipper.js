@@ -1,31 +1,11 @@
-var csid;
-var score = "{\"score\":100}";
+//part 1
+debug(lessonBridge.pause) // exposes scope when function called
+lessonBridge.pause() //calls the 'lessonBridge.pause' func.
 
-//close reading lesson
-if (document.getElementsByTagName("iframe")[0].id == "closereading_lesson") {
-	csid = closereading_lesson.src.split("?csid=")[1].split("#")[0];
-
-	closereading_lesson.contentDocument.getElementsByClassName("button fa fa-play pulse")[0].click();
-} else // normal lesson
-{
-	csid = html5Iframe.src.split("?csid=")[1].split("&type")[0];
+// part 2
+window.mainHook = _0xcc7fd3; // extracts the '_0xcc7fd3' variable to get the completeLessonComponent func.
+window.p1 = function(score) {
+    let csid = html5Iframe.src.split('csid=')[1].split('&type')[0] // gets the current lesson csid
+    objScore = { score: score } //makes the score into an obj to make server happy
+    mainHook.completeLessonComponent(csid, objScore); // sends the request to complete the lesson
 }
-
-// tricks server into thinking specific lesson was completed
-fetch("https://login.i-ready.com/student/lesson/componentCompleted", {
-	"headers": {
-		"accept": "*/*",
-		"accept-language": "en-US,en;q=0.9",
-		"content-type": "application/json;charset=UTF-8",
-		"sec-fetch-dest": "empty",
-		"sec-fetch-mode": "cors",
-		"sec-fetch-site": "same-origin",
-		"sec-gpc": "1"
-	},
-	"referrer": "https://login.i-ready.com/student/dashboard/home",
-	"referrerPolicy": "strict-origin-when-cross-origin",
-	"body": `{\"componentStatusId\":\"${csid}\",\"instructionLessonOutcome\":${score}}`,
-	"method": "POST",
-	"mode": "cors",
-	"credentials": "include"
-});
